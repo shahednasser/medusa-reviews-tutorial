@@ -1,6 +1,6 @@
-import { TransactionBaseService } from "@medusajs/medusa";
+import { BaseService } from "medusa-interfaces";
 
-class ProductReviewService extends TransactionBaseService {
+class ProductReviewService extends BaseService {
   constructor({ productReviewRepository, manager }) {
     super();
 

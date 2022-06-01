@@ -1,14 +1,11 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm"
+import { BaseEntity, Product } from "@medusajs/medusa"
+import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm"
 import { Max, Min } from "class-validator"
 
-import { Product } from "@medusajs/medusa"
-import { resolveDbType } from "@medusajs/medusa/dist/utils/db-aware-column"
-import { ulid } from "ulid"
+import { generateEntityId } from "@medusajs/medusa/dist/utils"
 
 @Entity()
-export class ProductReview {
-  @PrimaryColumn()
-  id: string
+export class ProductReview extends BaseEntity {
 
   @Index()
   @Column({ type: "varchar", nullable: true })
@@ -32,16 +29,8 @@ export class ProductReview {
   @Column({ nullable: false })
   content: string
 
-  @CreateDateColumn({ type: resolveDbType("timestamptz") })
-  created_at: Date
-
-  @UpdateDateColumn({ type: resolveDbType("timestamptz") })
-  updated_at: Date
-
   @BeforeInsert()
-  private beforeInsert() {
-    if (this.id) return
-    const id = ulid()
-    this.id = `prev_${id}`
+  private beforeInsert(): void {
+    this.id = generateEntityId(this.id, "prev")
   }
 }
